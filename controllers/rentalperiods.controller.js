@@ -1,10 +1,16 @@
 const { errorHandler } = require("../helpers/error_handler");
 const Contracts = require("../models/contracts.model");
 const RentalPeriods = require("../models/rentalPeriods.model");
+const { rentalperiodsValidation } = require("../validation/rentalperiods.validation");
 
 const addNewRentalPeriod = async (req, res) => {
   try {
-    const { contractId, start_at, end_at, daysum } = req.body;
+    const { error, value } = rentalperiodsValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { contractId, start_at, end_at, daysum } = req.body;
     const newRentalPeriod = await RentalPeriods.create({
       contractId,
       start_at,
@@ -41,7 +47,12 @@ const findByIdRentalPeriod = async (req, res) => {
 const updateRentalPeriod = async (req, res) => {
   try {
     const { id } = req.params;
-    const { contractId, start_at, end_at, daysum } = req.body;
+    const { error, value } = rentalperiodsValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { contractId, start_at, end_at, daysum } = req.body;
     const updatedRentalPeriod = await RentalPeriods.update(
       { contractId, start_at, end_at, daysum },
       { where: { id }, returning: true }

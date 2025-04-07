@@ -1,10 +1,16 @@
 const { errorHandler } = require("../helpers/error_handler");
 const Category = require("../models/category.models");
 const Model = require("../models/model.models");
+const { modelValidation } = require("../validation/model.validation");
 
 const addNewModel = async (req, res) => {
   try {
-    const { categoryId, name, brand, describtion } = req.body;
+    const { error, value } = modelValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { categoryId, name, brand, describtion } = req.body;
     const newModel = await Model.create({
       categoryId,
       name,
@@ -39,7 +45,12 @@ const findByIdModel = async (req, res) => {
 const updateModel = async (req, res) => {
   try {
     const { id } = req.params;
-    const { categoryId, name, brand, describtion } = req.body;
+    const { error, value } = modelValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { categoryId, name, brand, describtion } = req.body;
     const updatedModel = await Model.update(
       { categoryId, name, brand, describtion },
       { where: { id }, returning: true }

@@ -3,10 +3,16 @@ const Contracts = require("../models/contracts.model");
 const Products = require("../models/products.model");
 const Status = require("../models/status.model");
 const User = require("../models/user.models");
+const { contractValidation } = require("../validation/contracts.validation");
 
 const addNewContract = async (req, res) => {
   try {
-    const { userId, productId, statusId, start_at, end_at, created_at } =
+    const { error, value } = contractValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { userId, productId, statusId, start_at, end_at, created_at } =
       req.body;
     const newContract = await Contracts.create({
       userId,
@@ -44,7 +50,12 @@ const findByIdContract = async (req, res) => {
 const updateContract = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId, productId, statusId, start_at, end_at, created_at } =
+    const { error, value } = contractValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { userId, productId, statusId, start_at, end_at, created_at } =
       req.body;
     const updatedContract = await Contracts.update(
       { userId, productId, statusId, start_at, end_at, created_at },

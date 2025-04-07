@@ -10,9 +10,11 @@ const User = sequelize.define(
     passport: { type: DataTypes.STRING, allowNull: false },
     phone: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false },
+    password: { type: DataTypes.STRING, allowNull: false },
     address: { type: DataTypes.TEXT, allowNull: false },
-    registered_ar: { type: DataTypes.DATE, allowNull: false },
-    refresh_token: { type: DataTypes.STRING, allowNull: false },
+    is_active: { type: DataTypes.BOOLEAN, allowNull: false },
+    registered_at: { type: DataTypes.DATE, allowNull: false },
+    refresh_token: { type: DataTypes.STRING, allowNull: true },
   },
   {
     freezeTableName: true,

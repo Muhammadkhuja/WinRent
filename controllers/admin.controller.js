@@ -2,28 +2,46 @@ const { errorHandler } = require("../helpers/error_handler");
 const Admin = require("../models/admin.models");
 const config = require("config");
 const jwtService = require("../services/jwt.service");
+const bcrypt = require("bcrypt");
+const uuid = require("uuid");
+const mailService = require("../services/mail.service");
+const { adminValidation } = require("../validation/admin.validation");
 
 const addNewAdmin = async (req, res) => {
   try {
-    const {
+    const { error, value } = adminValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = {
       full_name,
       email,
       password,
       created_at,
       is_creator,
       is_active,
-      refresh_token,
     } = req.body;
+        const hashedPassword = bcrypt.hashSync(password, 7);
+        const activation_link = uuid.v4();
     const Newadmin = await Admin.create({
       full_name,
       email,
-      password,
+      password: hashedPassword,
       created_at,
       is_creator,
       is_active,
-      refresh_token,
+      activation_link
     });
-    res.status(200).send({ messgae: "New admins added", Newadmin });
+     await mailService.sendActivationMail(
+       Newadmin.email,
+       `${config.get("api_url")}/api/admin/activate/${activation_link}`
+     );
+     res.status(201).send({
+       message:
+         "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
+       Newadmin,
+     });
   } catch (error) {
     errorHandler(error, res);
   }
@@ -51,14 +69,18 @@ const findByIdAdmin = async (req, res) => {
 const updateAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    const {
+    const { error, value } = addNewAdmin(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = {
       full_name,
       email,
       password,
       created_at,
       is_creator,
       is_active,
-      refresh_token,
     } = req.body;
     const Newadmin = await Admin.update(
       {
@@ -68,7 +90,6 @@ const updateAdmin = async (req, res) => {
         created_at,
         is_creator,
         is_active,
-        refresh_token,
       },
       { where: { id }, returning: true }
     );
@@ -99,13 +120,15 @@ const loginadmin = async (req, res) => {
     if (!admin) {
       return res
         .status(400)
-        .send({ message: "Phone number yoki password noto'g'ri" });
+        .send({ message: "Email number yoki password noto'g'ri" });
     }
-    if (!password || password != admin.password) {
-      return res
-        .status(400)
-        .send({ message: "Phone number yoki password noto'g'ri" });
-    }
+
+        const valiPassword = bcrypt.compareSync(password, admin.password);
+        if (!valiPassword) {
+          return res
+            .status(400)
+            .send({ message: "Email yoki password noto'gri " });
+        }
 
     const payload = {
       id: admin.id,
@@ -121,7 +144,7 @@ const loginadmin = async (req, res) => {
       { where: { email } }
     );
 
-    res.cookie("refreshToken", tokens.refreshtoken, {
+    res.cookie("refreshTokenadmin", tokens.refreshtoken, {
       httpOnly: true,
       maxAge: config.get("refresh_cookie_time"),
     });
@@ -137,16 +160,16 @@ const loginadmin = async (req, res) => {
 
 const logoutadmin = async (req, res) => {
   try {
-    const { refreshToken } = req.cookies;
+    const { refreshTokenadmin } = req.cookies;
 
-    if (!refreshToken) {
+    if (!refreshTokenadmin) {
       return res
         .status(400)
         .send({ message: "Cookie refresh token topilmadi ?" });
     }
 
     const admin = await Admin.findOne({
-      where: { refresh_token: refreshToken },
+      where: { refresh_token: refreshTokenadmin },
     });
 
     if (!admin) {
@@ -157,7 +180,7 @@ const logoutadmin = async (req, res) => {
 
     await Admin.update({ refresh_token: " " }, { where: { id: admin.id }});
 
-    res.clearCookie("refreshToken");
+    res.clearCookie("refreshTokenadmin");
     res.send({ message: "Successfully logged out" });
   } catch (error) {
     errorHandler(error, res);
@@ -166,15 +189,15 @@ const logoutadmin = async (req, res) => {
 
 const refreshTokenadmin = async (req, res) => {
   try {
-    const { refreshToken } = req.cookies;
+    const { refreshTokenadmin } = req.cookies;
 
-    if (!refreshToken) {
+    if (!refreshTokenadmin) {
       return res
         .status(400)
         .send({ message: "Cookie refresh token topilmadi ?" });
     }
     const admin = await Admin.findOne({
-      where: { refresh_token: refreshToken },
+      where: { refresh_token: refreshTokenadmin },
     });
 
     if (!admin) {
@@ -192,7 +215,7 @@ const refreshTokenadmin = async (req, res) => {
     admin.refresh_token = tokens.refreshtoken;
     await admin.save();
 
-    res.cookie("refreshToken", tokens.refreshtoken, {
+    res.cookie("refreshTokenadmin", tokens.refreshtoken, {
       httpOnly: true,
       maxAge: config.get("refresh_cookie_time"),
     });
@@ -205,7 +228,29 @@ const refreshTokenadmin = async (req, res) => {
   }
 };
 
+const activaeAdmin = async (req, res) => {
+  try {
+    const admin = await Admin.findOne({ activation_link: req.params.link });
+    if (!admin) {
+      return res
+        .status(400)
+        .send({ message: "Bunday tokendagi foydalanuvchi topilmadi" });
+    }
+    admin.is_active = true;
+    await admin.save();
+    res.send({
+      message: "Foydalanuvchi falolashtirlidi",
+      status: admin.is_active,
+    });
+
+
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
 module.exports = {
+  activaeAdmin,
   loginadmin,
   logoutadmin,
   refreshTokenadmin,

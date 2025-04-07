@@ -2,10 +2,16 @@ const { errorHandler } = require("../helpers/error_handler");
 const Model = require("../models/model.models");
 const Owner = require("../models/owner.models");
 const Products = require("../models/products.model");
+const { productsValidation } = require("../validation/product.validation");
 
 const addNewProduct = async (req, res) => {
   try {
-    const { ownerId, modelId, name, price, status, created_at } = req.body;
+    const { error, value } = productsValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { ownerId, modelId, name, price, status, created_at } = req.body;
     const newProduct = await Products.create({
       ownerId,
       modelId,
@@ -42,7 +48,11 @@ const findByIdProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { ownerId, modelId, name, price, status, created_at } = req.body;
+    const { error, value } = productsValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+    value = { ownerId, modelId, name, price, status, created_at } = req.body;
     const updatedProduct = await Products.update(
       { ownerId, modelId, name, price, status, created_at },
       { where: { id }, returning: true }

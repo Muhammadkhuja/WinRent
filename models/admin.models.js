@@ -12,7 +12,7 @@ const Admin = sequelize.define(
     created_at: { type: DataTypes.DATE, allowNull: false },
     is_creator: { type: DataTypes.BOOLEAN, allowNull: false },
     is_active: { type: DataTypes.BOOLEAN, allowNull: false },
-    refresh_token: { type: DataTypes.STRING, allowNull: false },
+    refresh_token: { type: DataTypes.STRING, allowNull: true },
   },
   {
     freezeTableName: true,

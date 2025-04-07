@@ -1,9 +1,15 @@
 const { errorHandler } = require("../helpers/error_handler");
 const Status = require("../models/status.model");
+const { statusValidation } = require("../validation/status.validation");
 
 const addNewStatus = async (req, res) => {
   try {
-    const { entry_type, entry_id, status, update_at } = req.body;
+    const { error, value } = statusValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { entry_type, entry_id, status, update_at } = req.body;
     const newStatus = await Status.create({
       entry_type,
       entry_id,
@@ -38,7 +44,12 @@ const findByIdStatus = async (req, res) => {
 const updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { entry_type, entry_id, status, update_at } = req.body;
+    const { error, value } = statusValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { entry_type, entry_id, status, update_at } = req.body;
     const updatedStatus = await Status.update(
       { entry_type, entry_id, status, update_at },
       { where: { id }, returning: true }

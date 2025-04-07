@@ -1,5 +1,7 @@
+const logger = require("../services/logger.service");
+
 const errorHandler = (error, res) => {
-  console.log(error);
+  logger.log(error);
   res.status(400).send({ error: error.message });
 };
 

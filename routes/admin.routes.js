@@ -1,7 +1,8 @@
-const { addNewAdmin, findAllAdmin, findByIdAdmin, updateAdmin, deleteAdmin, loginadmin, logoutadmin, refreshTokenadmin } = require("../controllers/admin.controller");
+const { addNewAdmin, findAllAdmin, findByIdAdmin, updateAdmin, deleteAdmin, loginadmin, logoutadmin, refreshTokenadmin, activaeAdmin } = require("../controllers/admin.controller");
 
 const router = require("express").Router();
 
+router.get("/activate/:link", activaeAdmin)
 router.post("/login", loginadmin);
 router.post("/logout", logoutadmin);
 router.post("/refresh", refreshTokenadmin);

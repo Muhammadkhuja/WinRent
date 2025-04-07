@@ -1,10 +1,15 @@
 const { errorHandler } = require("../helpers/error_handler");
 const Contracts = require("../models/contracts.model");
 const Payments = require("../models/payments.model");
+const { paymentsValidation } = require("../validation/paymemt.validation");
 
 const addNewPayment = async (req, res) => {
-  try {
-    const { contractId, amount, payment, status, payment_date } = req.body;
+  try {const { error, value } = paymentsValidation(req.body);
+  if (error) {
+    return res.status(400).send({ message: error.details[0].message });
+  }
+
+    value = { contractId, amount, payment, status, payment_date } = req.body;
     const newPayment = await Payments.create({
       contractId,
       amount,
@@ -40,7 +45,12 @@ const findByIdPayment = async (req, res) => {
 const updatePayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { contractId, amount, payment, status, payment_date } = req.body;
+    const { error, value } = paymentsValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    value = { contractId, amount, payment, status, payment_date } = req.body;
     const updatedPayment = await Payments.update(
       { contractId, amount, payment, status, payment_date },
       { where: { id }, returning: true }
