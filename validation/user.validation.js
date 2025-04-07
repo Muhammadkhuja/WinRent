@@ -12,7 +12,7 @@ exports.userValidation = (body) => {
         "string.empty": "name bo'sh bo'lishi mummkin emas",
         "any.required": "Name kiriting",
       }),
-    passport: Joi.pattern(/^[A-Za-z0-9]$/)
+    passport: Joi.string().pattern(/^[A-Z0-9]$/)
       .min(7)
       .message("eng kamida 7 ta belgi")
       .max(10)
@@ -50,3 +50,5 @@ exports.userValidation = (body) => {
     abortEarly: false,
   });
 };
+
+

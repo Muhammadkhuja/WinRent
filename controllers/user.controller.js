@@ -14,7 +14,7 @@ const addNewUser = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = {
+    const {
       full_name,
       passport,
       phone,
@@ -23,7 +23,7 @@ const addNewUser = async (req, res) => {
       address,
       is_active,
       registered_at,
-    } = req.body;
+    } = value;
     const hashedPassword = bcrypt.hashSync(password, 7);
     const activation_link = uuid.v4();
     const newUser = await User.create({
@@ -79,7 +79,7 @@ const updateUser = async (req, res) => {
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
-    value = {
+    const {
       full_name,
       passport,
       phone,
@@ -88,7 +88,7 @@ const updateUser = async (req, res) => {
       address,
       is_active,
       registered_at,
-    } = req.body;
+    } = value;
     const updatedUser = await User.update(
       {
         full_name,

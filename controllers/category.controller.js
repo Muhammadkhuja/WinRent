@@ -9,7 +9,7 @@ const addNewCategory = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { name, about } = req.body;
+    const { name, about } = value;
     const newCategory = await Category.create({
       name,
       about,
@@ -47,7 +47,7 @@ const updateCategory = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { name, about } = req.body;
+    const { name, about } = value;
     const updatedCategory = await Category.update(
       { name, about },
       { where: { id }, returning: true }

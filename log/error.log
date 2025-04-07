@@ -1,1 +1,6 @@
 {"label":"rent","level":"error","message":"Xatolik log test","timestamp":"2025-04-04T15:14:56.901Z"}
+{"body":"{\r\n  \"full_name\": \"kimdur Valiyev\"\r\n  \"email\": \"helloshadow779@gmail.com\",\r\n  \"password\": \"kirmisan123\",\r\n  \"created_at\": \"2025-04-04T10:00:00\",\r\n  \"is_creator\": true,\r\n  \"is_active\": \"true\",\r\n  \"refresh_token\": \"some_random_refresh_token_string\"\r\n}\r\n","expose":true,"label":"rent","level":"error","status":400,"statusCode":400,"timestamp":"2025-04-07T04:06:48.173Z","type":"entity.parse.failed"}
+{"body":"{\r\n  \"full_name\": \"kimdur Valiyev\"\r\n  \"email\": \"helloshadow779@gmail.com\",\r\n  \"password\": \"kirmisan123\",\r\n  \"created_at\": \"2025-04-04T10:00:00\",\r\n  \"is_creator\": true,\r\n  \"is_active\": \"true\",\r\n  \"refresh_token\": \"some_random_refresh_token_string\"\r\n}\r\n","expose":true,"label":"rent","level":"error","status":400,"statusCode":400,"timestamp":"2025-04-07T04:06:56.111Z","type":"entity.parse.failed"}
+{"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:45.008Z"}
+{"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:49.196Z"}
+{"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:59.032Z"}

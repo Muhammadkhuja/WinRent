@@ -11,7 +11,7 @@ const addNewProduct = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { ownerId, modelId, name, price, status, created_at } = req.body;
+    const  { ownerId, modelId, name, price, status, created_at } = value;
     const newProduct = await Products.create({
       ownerId,
       modelId,
@@ -52,7 +52,7 @@ const updateProduct = async (req, res) => {
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
-    value = { ownerId, modelId, name, price, status, created_at } = req.body;
+    const  { ownerId, modelId, name, price, status, created_at } = value;
     const updatedProduct = await Products.update(
       { ownerId, modelId, name, price, status, created_at },
       { where: { id }, returning: true }

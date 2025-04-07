@@ -9,7 +9,7 @@ const addNewStatus = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { entry_type, entry_id, status, update_at } = req.body;
+    const { entry_type, entry_id, status, update_at } = value;
     const newStatus = await Status.create({
       entry_type,
       entry_id,
@@ -49,7 +49,7 @@ const updateStatus = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { entry_type, entry_id, status, update_at } = req.body;
+    const { entry_type, entry_id, status, update_at } = value;
     const updatedStatus = await Status.update(
       { entry_type, entry_id, status, update_at },
       { where: { id }, returning: true }

@@ -9,7 +9,7 @@ const addNewCard = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { number, date, card_holeder, card_type, userId } = req.body;
+    const { number, date, card_holeder, card_type, userId } = value;
     const newCard = await Card.create({
       number,
       date,
@@ -50,7 +50,7 @@ const updateCard = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { number, date, card_holeder, card_type, userId } = req.body;
+    const { number, date, card_holeder, card_type, userId } = value;
     const updatedCard = await Card.update(
       { number, date, card_holeder, card_type, userId },
       { where: { id }, returning: true }

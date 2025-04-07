@@ -14,8 +14,8 @@ const addNewOwner = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { full_name, phone, email, password, address, is_active, created_at } =
-      req.body;
+    const { full_name, phone, email, password, address, is_active, created_at } =
+      value;
               const hashedPassword = bcrypt.hashSync(password, 7);
               const activation_link = uuid.v4();
     const newOwner = await Owner.create({
@@ -71,8 +71,8 @@ const updateOwner = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { full_name, phone, email, password, address, is_active, created_at } =
-      req.body;
+    const  { full_name, phone, email, password, address, is_active, created_at } =
+      value;
     const updatedOwner = await Owner.update(
       {
         full_name,

@@ -12,8 +12,8 @@ const addNewContract = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { userId, productId, statusId, start_at, end_at, created_at } =
-      req.body;
+    const { userId, productId, statusId, start_at, end_at, created_at } =
+      value;
     const newContract = await Contracts.create({
       userId,
       productId,

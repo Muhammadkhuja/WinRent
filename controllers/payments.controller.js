@@ -9,7 +9,7 @@ const addNewPayment = async (req, res) => {
     return res.status(400).send({ message: error.details[0].message });
   }
 
-    value = { contractId, amount, payment, status, payment_date } = req.body;
+    const { contractId, amount, payment, status, payment_date } = value;
     const newPayment = await Payments.create({
       contractId,
       amount,
@@ -50,7 +50,7 @@ const updatePayment = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { contractId, amount, payment, status, payment_date } = req.body;
+    const { contractId, amount, payment, status, payment_date } = value;
     const updatedPayment = await Payments.update(
       { contractId, amount, payment, status, payment_date },
       { where: { id }, returning: true }

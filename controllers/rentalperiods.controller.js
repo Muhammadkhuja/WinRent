@@ -10,7 +10,7 @@ const addNewRentalPeriod = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { contractId, start_at, end_at, daysum } = req.body;
+    const { contractId, start_at, end_at, daysum } = value;
     const newRentalPeriod = await RentalPeriods.create({
       contractId,
       start_at,
@@ -52,7 +52,7 @@ const updateRentalPeriod = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { contractId, start_at, end_at, daysum } = req.body;
+    const { contractId, start_at, end_at, daysum } = value;
     const updatedRentalPeriod = await RentalPeriods.update(
       { contractId, start_at, end_at, daysum },
       { where: { id }, returning: true }

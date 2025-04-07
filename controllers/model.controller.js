@@ -10,7 +10,7 @@ const addNewModel = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { categoryId, name, brand, describtion } = req.body;
+    const { categoryId, name, brand, describtion } = value;
     const newModel = await Model.create({
       categoryId,
       name,
@@ -50,7 +50,7 @@ const updateModel = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { categoryId, name, brand, describtion } = req.body;
+    const { categoryId, name, brand, describtion } = value;
     const updatedModel = await Model.update(
       { categoryId, name, brand, describtion },
       { where: { id }, returning: true }

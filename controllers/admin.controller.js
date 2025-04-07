@@ -14,14 +14,14 @@ const addNewAdmin = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = {
+    const {
       full_name,
       email,
       password,
       created_at,
       is_creator,
       is_active,
-    } = req.body;
+    } = value;
         const hashedPassword = bcrypt.hashSync(password, 7);
         const activation_link = uuid.v4();
     const Newadmin = await Admin.create({
@@ -74,14 +74,14 @@ const updateAdmin = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = {
+    const {
       full_name,
       email,
       password,
       created_at,
       is_creator,
       is_active,
-    } = req.body;
+    } = value;
     const Newadmin = await Admin.update(
       {
         full_name,
