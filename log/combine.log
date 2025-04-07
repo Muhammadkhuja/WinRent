@@ -14,3 +14,5 @@
 {"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:59.032Z"}
 {"label":"rent","level":"warn","message":"qorn rejim","timestamp":"2025-04-07T04:37:59.033Z"}
 {"label":"rent","level":"info","message":"in rejim","timestamp":"2025-04-07T04:37:59.034Z"}
+{"code":"ERR_HTTP_HEADERS_SENT","label":"rent","level":"error","timestamp":"2025-04-07T07:08:22.543Z"}
+{"code":"ERR_HTTP_HEADERS_SENT","label":"rent","level":"error","timestamp":"2025-04-07T07:14:26.058Z"}

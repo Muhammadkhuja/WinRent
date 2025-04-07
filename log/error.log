@@ -4,3 +4,5 @@
 {"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:45.008Z"}
 {"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:49.196Z"}
 {"label":"rent","level":"error","message":"logie rejim","timestamp":"2025-04-07T04:37:59.032Z"}
+{"code":"ERR_HTTP_HEADERS_SENT","label":"rent","level":"error","timestamp":"2025-04-07T07:08:22.543Z"}
+{"code":"ERR_HTTP_HEADERS_SENT","label":"rent","level":"error","timestamp":"2025-04-07T07:14:26.058Z"}

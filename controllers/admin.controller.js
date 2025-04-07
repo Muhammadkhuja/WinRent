@@ -4,7 +4,6 @@ const config = require("config");
 const jwtService = require("../services/jwt.service");
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
-const mailService = require("../services/mail.service");
 const { adminValidation } = require("../validation/admin.validation");
 
 const addNewAdmin = async (req, res) => {
@@ -33,10 +32,7 @@ const addNewAdmin = async (req, res) => {
       is_active,
       activation_link
     });
-     await mailService.sendActivationMail(
-       Newadmin.email,
-       `${config.get("api_url")}/api/admin/activate/${activation_link}`
-     );
+
      res.status(201).send({
        message:
          "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
@@ -46,6 +42,7 @@ const addNewAdmin = async (req, res) => {
     errorHandler(error, res);
   }
 };
+
 
 const findAllAdmin = async (req, res) => {
   try {

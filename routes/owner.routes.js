@@ -1,7 +1,8 @@
-const { addNewOwner, findAllOwners, findByIdOwner, updateOwner, deleteOwner, loginowner, logoutowner, refreshTokenowner, activateOwner } = require("../controllers/owner.controller");
+const { addNewOwner, findAllOwners, findByIdOwner, updateOwner, deleteOwner, loginowner, logoutowner, refreshTokenowner, activateOwner, registrOwners } = require("../controllers/owner.controller");
 
 const router = require("express").Router();
 
+router.post("/registr", registrOwners);
 router.get("/activate/:link", activateOwner);
 router.post("/login", loginowner);
 router.post("/logout", logoutowner);

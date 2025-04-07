@@ -37,15 +37,72 @@ const addNewUser = async (req, res) => {
       registered_at,
       activation_link,
     });
-
-         await mailService.sendActivationMail(
-           newUser.email,
-           `${config.get("api_url")}/api/user/activate/${activation_link}`
-         );
          res.status(201).send({
            message:
              "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
            newUser,
+         });
+
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
+const registrUser = async (req, res) => {
+  try {
+    const { error, value } = userValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    const {
+      full_name,
+      passport,
+      phone,
+      email,
+      password,
+      address,
+      is_active,
+      registered_at,
+    } = value;
+    const user = await User.create({
+      full_name,
+      passport,
+      phone,
+      email,
+      password,
+      address,
+      is_active,
+      registered_at,
+      activation_link,
+    });
+    const activation_link = uuid.v4();
+
+
+         await mailService.sendActivationMail(
+           user.email,
+           `${config.get("api_url")}/api/user/activate/${activation_link}`
+         );
+             const payload = {
+               id: user.id,
+               email: user.email,
+               is_active: user.is_active,
+             };
+
+             const tokens = jwtService.generatorTokens(payload);
+
+             await User.update(
+               { refresh_token: tokens.refreshtoken },
+               { where: { email } }
+             );
+
+             res.cookie("refreshToken", tokens.refreshtoken, {
+               httpOnly: true,
+               maxAge: config.get("refresh_cookie_time"),
+             });
+         res.status(201).send({
+           message:
+             "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting"
          });
 
   } catch (error) {
@@ -253,6 +310,7 @@ const activateuser = async (req, res) => {
 };
 
 module.exports = {
+  registrUser,
   activateuser,
   loginuser,
   logoutuser,

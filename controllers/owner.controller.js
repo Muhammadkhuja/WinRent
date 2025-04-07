@@ -29,15 +29,64 @@ const addNewOwner = async (req, res) => {
       activation_link
     });
 
-         await mailService.sendActivationMail(
-           newOwner.email,
-           `${config.get("api_url")}/api/owner/activate/${activation_link}`
-         );
          res.status(201).send({
            message:
-             "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
+             "Yangi foydalanuvchi qo'shildi",
            newOwner,
          });
+
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
+const registrOwners = async (req, res) => {
+  try {
+    const { error, value } = ownerValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    const { full_name, phone, email, password, address, is_active, created_at } =
+      value;
+    const owner = await Owner.create({
+      full_name,
+      phone,
+      email,
+      password,
+      address,
+      created_at,
+      is_active
+    });
+                  const activation_link = uuid.v4();
+
+         await mailService.sendActivationMail(
+           owner.email,
+           `${config.get("api_url")}/api/owner/activate/${activation_link}`
+         );
+         const payload = {
+           id: owner.id,
+           email: owner.email,
+           is_active: owner.is_active,
+         };
+
+         const tokens = jwtService.generatorTokens(payload);
+
+         await Owner.update(
+           { refresh_token: tokens.refreshtoken },
+           { where: { email } }
+         );
+
+         res.cookie("refreshTokenowner", tokens.refreshtoken, {
+           httpOnly: true,
+           maxAge: config.get("refresh_cookie_time"),
+         });
+         res.status(201).send({
+           message:
+             "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting"
+         });
+         console.log(tokens);
+         
 
   } catch (error) {
     errorHandler(error, res);
@@ -239,6 +288,7 @@ const activateOwner = async (req, res) => {
 };
 
 module.exports = {
+  registrOwners,
   activateOwner,
   loginowner,
   logoutowner,
