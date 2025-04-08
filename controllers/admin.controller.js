@@ -22,7 +22,7 @@ const addNewAdmin = async (req, res) => {
       is_active,
     } = value;
         const hashedPassword = bcrypt.hashSync(password, 7);
-        const activation_link = uuid.v4();
+
     const Newadmin = await Admin.create({
       full_name,
       email,
@@ -30,12 +30,11 @@ const addNewAdmin = async (req, res) => {
       created_at,
       is_creator,
       is_active,
-      activation_link
     });
 
      res.status(201).send({
        message:
-         "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
+         "Yangi foydalanuvchi qo'shildi",
        Newadmin,
      });
   } catch (error) {
@@ -66,7 +65,7 @@ const findByIdAdmin = async (req, res) => {
 const updateAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    const { error, value } = addNewAdmin(req.body);
+    const { error, value } = adminValidation(req.body);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }

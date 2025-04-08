@@ -19,7 +19,7 @@ router.use("/products", productsROUTE)
 router.use("/contracts",  contractROUTE);
 router.use("/status", statusROUTE)
 router.use("/payments", paymentsROUTE)
-router.use("/RentalPeriod", RentalPeriodROUTER);
+router.use("/rentalp", RentalPeriodROUTER);
 router.use("/card", cardROUTE)
 router.use("/category", categoryROUTE)
 router.use("/user", userROUTE)

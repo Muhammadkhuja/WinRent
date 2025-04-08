@@ -9,12 +9,15 @@ exports.statusValidation = (body) => {
       "string.empty": "Bo'sh bo'lishi mummkin emas",
       "any.required": "Bo'sh",
     }),
-    status: Joi.string().required().length(150)
-          .message("Kopi bilan 150 ta belgi bo'lishi kerak !")
-          .messages({
-            "string.empty": "So'z bo'sh bo'lishi mummkin emas",
-            "any.required": "So'z kiriting",
-          }),
+    status: Joi.string()
+      .required()
+      .min(10)
+      .max(150)
+      .message("Kopi bilan 150 ta belgi bo'lishi kerak !")
+      .messages({
+        "string.empty": "So'z bo'sh bo'lishi mummkin emas",
+        "any.required": "So'z kiriting",
+      }),
     update_at: Joi.date().default(Date.now),
   });
   return Schamestatus.validate(body, {

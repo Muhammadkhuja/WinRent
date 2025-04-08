@@ -2,6 +2,10 @@ const Joi = require("joi");
 
 exports.modelValidation = (body) => {
   const Schamemodel = Joi.object({
+    categoryId: Joi.number().required().messages({
+      "string.empty": "Bo'sh bo'lishi mummkin emas",
+      "any.required": "Bo'sh",
+    }),
     name: Joi.string()
       .required()
       .min(4)

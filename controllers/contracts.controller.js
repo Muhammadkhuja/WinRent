@@ -55,8 +55,8 @@ const updateContract = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    value = { userId, productId, statusId, start_at, end_at, created_at } =
-      req.body;
+    const { userId, productId, statusId, start_at, end_at, created_at } =
+      value;
     const updatedContract = await Contracts.update(
       { userId, productId, statusId, start_at, end_at, created_at },
       { where: { id }, returning: true }

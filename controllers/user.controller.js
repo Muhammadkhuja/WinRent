@@ -37,12 +37,11 @@ const addNewUser = async (req, res) => {
       registered_at,
       activation_link,
     });
-         res.status(201).send({
-           message:
-             "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
-           newUser,
-         });
-
+    res.status(201).send({
+      message:
+        "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
+      newUser,
+    });
   } catch (error) {
     errorHandler(error, res);
   }
@@ -73,38 +72,35 @@ const registrUser = async (req, res) => {
       password,
       address,
       is_active,
-      registered_at,
-      activation_link,
+      registered_at
     });
     const activation_link = uuid.v4();
 
+    await mailService.sendActivationMail(
+      user.email,
+      `${config.get("api_url")}/api/user/activate/${activation_link}`
+    );
+    const payload = {
+      id: user.id,
+      email: user.email,
+      is_active: user.is_active,
+    };
 
-         await mailService.sendActivationMail(
-           user.email,
-           `${config.get("api_url")}/api/user/activate/${activation_link}`
-         );
-             const payload = {
-               id: user.id,
-               email: user.email,
-               is_active: user.is_active,
-             };
+    const tokens = jwtService.generatorTokens(payload);
 
-             const tokens = jwtService.generatorTokens(payload);
+    await User.update(
+      { refresh_token: tokens.refreshtoken },
+      { where: { email } }
+    );
 
-             await User.update(
-               { refresh_token: tokens.refreshtoken },
-               { where: { email } }
-             );
-
-             res.cookie("refreshToken", tokens.refreshtoken, {
-               httpOnly: true,
-               maxAge: config.get("refresh_cookie_time"),
-             });
-         res.status(201).send({
-           message:
-             "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting"
-         });
-
+    res.cookie("refreshToken", tokens.refreshtoken, {
+      httpOnly: true,
+      maxAge: config.get("refresh_cookie_time"),
+    });
+    res.status(201).send({
+      message:
+        "Yangi foydalanuvchi qo'shildi. Akkauntni foallashtirish uchun pochtaga o'ting",
+    });
   } catch (error) {
     errorHandler(error, res);
   }
@@ -129,7 +125,7 @@ const findByIdUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {  
+const updateUser = async (req, res) => {
   const { id } = req.params;
   try {
     const { error, value } = userValidation(req.body);
