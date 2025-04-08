@@ -6,6 +6,9 @@ const bcrypt = require("bcrypt");
 const uuid = require("uuid");
 const { adminValidation } = require("../validation/admin.validation");
 
+
+
+
 const addNewAdmin = async (req, res) => {
   try {
     const { error, value } = adminValidation(req.body);
@@ -13,15 +16,9 @@ const addNewAdmin = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const {
-      full_name,
-      email,
-      password,
-      created_at,
-      is_creator,
-      is_active,
-    } = value;
-        const hashedPassword = bcrypt.hashSync(password, 7);
+    const { full_name, email, password, created_at, is_creator, is_active } =
+      value;
+    const hashedPassword = bcrypt.hashSync(password, 7);
 
     const Newadmin = await Admin.create({
       full_name,
@@ -32,16 +29,14 @@ const addNewAdmin = async (req, res) => {
       is_active,
     });
 
-     res.status(201).send({
-       message:
-         "Yangi foydalanuvchi qo'shildi",
-       Newadmin,
-     });
+    res.status(201).send({
+      message: "Yangi foydalanuvchi qo'shildi",
+      Newadmin,
+    });
   } catch (error) {
     errorHandler(error, res);
   }
 };
-
 
 const findAllAdmin = async (req, res) => {
   try {
@@ -70,14 +65,8 @@ const updateAdmin = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const {
-      full_name,
-      email,
-      password,
-      created_at,
-      is_creator,
-      is_active,
-    } = value;
+    const { full_name, email, password, created_at, is_creator, is_active } =
+      value;
     const Newadmin = await Admin.update(
       {
         full_name,
@@ -116,21 +105,20 @@ const loginadmin = async (req, res) => {
     if (!admin) {
       return res
         .status(400)
-        .send({ message: "Email number yoki password noto'g'ri" });
+        .send({ message: "Email number yoki password noto'g'ri 1 " });
     }
 
-        const valiPassword = bcrypt.compareSync(password, admin.password);
-        if (!valiPassword) {
-          return res
-            .status(400)
-            .send({ message: "Email yoki password noto'gri " });
-        }
+    const valiPassword = bcrypt.compareSync(password, admin.password);
+    if (!valiPassword) {
+      return res.status(400).send({ message: "Email yoki password noto'gri " });
+    }
 
     const payload = {
       id: admin.id,
       email: admin.email,
       is_active: admin.is_active,
       is_creator: admin.is_creator,
+      role: "admin",
     };
 
     const tokens = jwtService.generatorTokens(payload);
@@ -174,7 +162,7 @@ const logoutadmin = async (req, res) => {
         .send({ message: "Bunday tokendagi foydalanuvchi topilmadi" });
     }
 
-    await Admin.update({ refresh_token: " " }, { where: { id: admin.id }});
+    await Admin.update({ refresh_token: " " }, { where: { id: admin.id } });
 
     res.clearCookie("refreshTokenadmin");
     res.send({ message: "Successfully logged out" });
@@ -205,6 +193,7 @@ const refreshTokenadmin = async (req, res) => {
       id: admin._id,
       email: admin.email,
       role: admin.role,
+      role: "admin",
     };
 
     const tokens = jwtService.generatorTokens(payload);
@@ -238,8 +227,6 @@ const activaeAdmin = async (req, res) => {
       message: "Foydalanuvchi falolashtirlidi",
       status: admin.is_active,
     });
-
-
   } catch (error) {
     errorHandler(error, res);
   }

@@ -3,7 +3,7 @@ const Joi = require("joi");
 exports.statusValidation = (body) => {
   const Schamestatus = Joi.object({
     entry_type: Joi.string()
-      .valid("paid", "unpaid", "process", "canceled")
+      .valid("paid", "unpaid", "process", "canceled", "invalid")
       .required(),
     entry_id: Joi.number().precision(2).positive().required().messages({
       "string.empty": "Bo'sh bo'lishi mummkin emas",

@@ -84,6 +84,7 @@ const registrUser = async (req, res) => {
       id: user.id,
       email: user.email,
       is_active: user.is_active,
+      role: "client",
     };
 
     const tokens = jwtService.generatorTokens(payload);
@@ -193,6 +194,7 @@ const loginuser = async (req, res) => {
       id: user.id,
       email: user.email,
       is_active: user.is_active,
+      role: "client",
     };
 
     const tokens = jwtService.generatorTokens(payload);
@@ -267,6 +269,7 @@ const refreshTokenuser = async (req, res) => {
       id: user._id,
       email: user.email,
       role: user.role,
+      role: "client",
     };
 
     const tokens = jwtService.generatorTokens(payload);

@@ -68,6 +68,7 @@ const registrOwners = async (req, res) => {
            id: owner.id,
            email: owner.email,
            is_active: owner.is_active,
+           role: "owner",
          };
 
          const tokens = jwtService.generatorTokens(payload);
@@ -175,6 +176,7 @@ const loginowner = async (req, res) => {
       id: owner.id,
       email: owner.email,
       is_active: owner.is_active,
+      role: "owner",
     };
 
     const tokens = jwtService.generatorTokens(payload);
@@ -249,6 +251,7 @@ const refreshTokenowner = async (req, res) => {
       id: owner._id,
       email: owner.email,
       role: owner.role,
+      role: "owner"
     };
 
     const tokens = jwtService.generatorTokens(payload);
