@@ -16,8 +16,7 @@ const addNewContract = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const { userId, productId, statusId, start_at, end_at, created_at } =
-      value;
+    const { userId, productId, statusId, start_at, end_at, created_at } = value;
     const newContract = await Contracts.create({
       userId,
       productId,
@@ -34,7 +33,9 @@ const addNewContract = async (req, res) => {
 
 const findAllContracts = async (req, res) => {
   try {
-    const contracts = await Contracts.findAll({include: [User, Products, Status]});
+    const contracts = await Contracts.findAll({
+      include: [User, Products, Status],
+    });
     res.status(200).send({ message: "Contracts found", contracts });
   } catch (error) {
     errorHandler(error, res);
@@ -45,6 +46,9 @@ const findByIdContract = async (req, res) => {
   try {
     const { id } = req.params;
     const contract = await Contracts.findByPk(id);
+    if (!contract) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ contract });
   } catch (error) {
     errorHandler(error, res);
@@ -59,12 +63,14 @@ const updateContract = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const { userId, productId, statusId, start_at, end_at, created_at } =
-      value;
+    const { userId, productId, statusId, start_at, end_at, created_at } = value;
     const updatedContract = await Contracts.update(
       { userId, productId, statusId, start_at, end_at, created_at },
       { where: { id }, returning: true }
     );
+    if (!updatedContract) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedContract: updatedContract[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -75,14 +81,14 @@ const deleteContract = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedContract = await Contracts.destroy({ where: { id } });
+    if (!deletedContract) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedContract });
   } catch (error) {
     errorHandler(error, res);
   }
 };
-
-
-
 
 const getRentedProducts = async (req, res) => {
   try {
@@ -111,7 +117,6 @@ const getRentedProducts = async (req, res) => {
     errorHandler(error, res);
   }
 };
-
 
 const getCancelledClients = async (req, res) => {
   try {
@@ -183,8 +188,6 @@ const getDamagedClients = async (req, res) => {
   }
 };
 
-
-
 const { fn, col } = require("sequelize");
 
 const getTopOwnersByCategory = async (req, res) => {
@@ -230,9 +233,6 @@ const getTopOwnersByCategory = async (req, res) => {
     errorHandler(error, res);
   }
 };
-
-
-
 
 module.exports = {
   getTopOwnersByCategory,

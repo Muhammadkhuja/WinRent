@@ -25,7 +25,7 @@ const addNewCard = async (req, res) => {
 
 const findAllCards = async (req, res) => {
   try {
-    const cards = await Card.findAll({include: [User]});
+    const cards = await Card.findAll({ include: [User] });
     res.status(200).send({ message: "Cards found", cards });
   } catch (error) {
     errorHandler(error, res);
@@ -36,6 +36,9 @@ const findByIdCard = async (req, res) => {
   try {
     const { id } = req.params;
     const card = await Card.findByPk(id);
+    if (!card) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ card });
   } catch (error) {
     errorHandler(error, res);
@@ -55,6 +58,9 @@ const updateCard = async (req, res) => {
       { number, date, card_holeder, card_type, userId },
       { where: { id }, returning: true }
     );
+    if (!updatedCard) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedCard: updatedCard[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -65,6 +71,9 @@ const deleteCard = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedCard = await Card.destroy({ where: { id } });
+    if (!deletedCard) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedCard });
   } catch (error) {
     errorHandler(error, res);

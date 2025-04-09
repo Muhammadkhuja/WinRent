@@ -21,4 +21,6 @@ router.get("/:id", authGuard,clientGuard, clientSelfGuard, findByIdPayment);
 router.put("/:id", authGuard,adminGuard, updatePayment);
 router.delete("/:id", authGuard,adminGuard, deletePayment);
 
+
+
 module.exports = router;

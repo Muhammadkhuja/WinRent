@@ -11,7 +11,7 @@ const addNewProduct = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const  { ownerId, modelId, name, price, status, created_at } = value;
+    const { ownerId, modelId, name, price, status, created_at } = value;
     const newProduct = await Products.create({
       ownerId,
       modelId,
@@ -28,7 +28,7 @@ const addNewProduct = async (req, res) => {
 
 const findAllProducts = async (req, res) => {
   try {
-    const products = await Products.findAll({include: [Owner, Model]});
+    const products = await Products.findAll({ include: [Owner, Model] });
     res.status(200).send({ message: "Products found", products });
   } catch (error) {
     errorHandler(error, res);
@@ -39,6 +39,9 @@ const findByIdProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Products.findByPk(id);
+    if (!product) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ product });
   } catch (error) {
     errorHandler(error, res);
@@ -52,11 +55,14 @@ const updateProduct = async (req, res) => {
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
-    const  { ownerId, modelId, name, price, status, created_at } = value;
+    const { ownerId, modelId, name, price, status, created_at } = value;
     const updatedProduct = await Products.update(
       { ownerId, modelId, name, price, status, created_at },
       { where: { id }, returning: true }
     );
+    if (!updatedProduct) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedProduct: updatedProduct[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -67,6 +73,9 @@ const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedProduct = await Products.destroy({ where: { id } });
+    if (!deletedProduct) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedProduct });
   } catch (error) {
     errorHandler(error, res);

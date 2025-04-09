@@ -9,10 +9,11 @@ const User = require("../models/user.models");
 const { paymentsValidation } = require("../validation/paymemt.validation");
 
 const addNewPayment = async (req, res) => {
-  try {const { error, value } = paymentsValidation(req.body);
-  if (error) {
-    return res.status(400).send({ message: error.details[0].message });
-  }
+  try {
+    const { error, value } = paymentsValidation(req.body);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
 
     const { contractId, amount, payment, status, payment_date } = value;
     const newPayment = await Payments.create({
@@ -30,7 +31,7 @@ const addNewPayment = async (req, res) => {
 
 const findAllPayments = async (req, res) => {
   try {
-    const payments = await Payments.findAll({include: [Contracts]});
+    const payments = await Payments.findAll({ include: [Contracts] });
     res.status(200).send({ message: "Payments found", payments });
   } catch (error) {
     errorHandler(error, res);
@@ -41,6 +42,9 @@ const findByIdPayment = async (req, res) => {
   try {
     const { id } = req.params;
     const payment = await Payments.findByPk(id);
+    // if (!payment) {
+    //   return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    // }
     res.status(200).send({ payment });
   } catch (error) {
     errorHandler(error, res);
@@ -60,6 +64,9 @@ const updatePayment = async (req, res) => {
       { contractId, amount, payment, status, payment_date },
       { where: { id }, returning: true }
     );
+    if (!updatedPayment) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedPayment: updatedPayment[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -70,6 +77,9 @@ const deletePayment = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedPayment = await Payments.destroy({ where: { id } });
+    if (!deletedPayment) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedPayment });
   } catch (error) {
     errorHandler(error, res);
@@ -135,8 +145,6 @@ const getClientPayments = async (req, res) => {
     errorHandler(error, res);
   }
 };
-
-
 
 module.exports = {
   getClientPayments,

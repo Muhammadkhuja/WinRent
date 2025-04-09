@@ -1,7 +1,9 @@
 const { errorHandler } = require("../helpers/error_handler");
 const Contracts = require("../models/contracts.model");
 const RentalPeriods = require("../models/rentalPeriods.model");
-const { rentalperiodsValidation } = require("../validation/rentalperiods.validation");
+const {
+  rentalperiodsValidation,
+} = require("../validation/rentalperiods.validation");
 
 const addNewRentalPeriod = async (req, res) => {
   try {
@@ -27,7 +29,7 @@ const addNewRentalPeriod = async (req, res) => {
 
 const findAllRentalPeriods = async (req, res) => {
   try {
-    const rentalPeriods = await RentalPeriods.findAll({include: [Contracts]});
+    const rentalPeriods = await RentalPeriods.findAll({ include: [Contracts] });
     res.status(200).send({ message: "Rental periods found", rentalPeriods });
   } catch (error) {
     errorHandler(error, res);
@@ -38,6 +40,9 @@ const findByIdRentalPeriod = async (req, res) => {
   try {
     const { id } = req.params;
     const rentalPeriod = await RentalPeriods.findByPk(id);
+    if (!rentalPeriod) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ rentalPeriod });
   } catch (error) {
     errorHandler(error, res);
@@ -57,6 +62,9 @@ const updateRentalPeriod = async (req, res) => {
       { contractId, start_at, end_at, daysum },
       { where: { id }, returning: true }
     );
+    if (!updatedRentalPeriod) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedRentalPeriod: updatedRentalPeriod[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -67,6 +75,9 @@ const deleteRentalPeriod = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedRentalPeriod = await RentalPeriods.destroy({ where: { id } });
+    if (!deletedRentalPeriod) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedRentalPeriod });
   } catch (error) {
     errorHandler(error, res);

@@ -6,9 +6,6 @@ const bcrypt = require("bcrypt");
 const uuid = require("uuid");
 const { adminValidation } = require("../validation/admin.validation");
 
-
-
-
 const addNewAdmin = async (req, res) => {
   try {
     const { error, value } = adminValidation(req.body);
@@ -51,6 +48,9 @@ const findByIdAdmin = async (req, res) => {
   try {
     const { id } = req.params;
     const Newadmin = await Admin.findByPk(id);
+    if (!Newadmin) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ Newadmin });
   } catch (error) {
     errorHandler(error, res);
@@ -78,6 +78,9 @@ const updateAdmin = async (req, res) => {
       },
       { where: { id }, returning: true }
     );
+    if (!Newadmin) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ Newadmin: Newadmin[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -88,6 +91,9 @@ const deleteAdmin = async (req, res) => {
   try {
     const { id } = req.params;
     const Newadmin = await Admin.destroy({ where: { id } });
+    if (!Newadmin) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ Newadmin });
   } catch (error) {
     errorHandler(error, res);

@@ -14,8 +14,8 @@ module.exports = function (Model, idField = "id") {
         throw ApiError.notFound("Client ma'lumot topilmadi");
       }
 
-      if (record.id !== req.user.id && record.client_id !== req.user.id) {
-        throw ApiError.forbidden("Kirmisan");
+      if (record.id !== req.user.id && record.userId !== req.user.id) {
+        throw ApiError.forbidden("Kirmisan client.self");
       }
 
       next();

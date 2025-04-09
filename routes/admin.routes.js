@@ -19,8 +19,8 @@ router.post("/login", loginadmin);
 router.post("/logout", logoutadmin);
 router.post("/refresh", refreshTokenadmin);
 
-// router.post("/", authGuard, is_creatorGuard, addNewAdmin);
-router.post("/", addNewAdmin);
+router.post("/", authGuard, is_creatorGuard, addNewAdmin);
+// router.post("/", addNewAdmin);
 router.get("/", authGuard, findAllAdmin);
 router.get("/:id", authGuard, findByIdAdmin);
 router.put("/:id", authGuard, updateAdmin);

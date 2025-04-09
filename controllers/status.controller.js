@@ -35,6 +35,9 @@ const findByIdStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const status = await Status.findByPk(id);
+    if (!status) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ status });
   } catch (error) {
     errorHandler(error, res);
@@ -54,6 +57,9 @@ const updateStatus = async (req, res) => {
       { entry_type, entry_id, status, update_at },
       { where: { id }, returning: true }
     );
+    if (!updatedStatus) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedStatus: updatedStatus[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -64,6 +70,9 @@ const deleteStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedStatus = await Status.destroy({ where: { id } });
+    if (!deletedStatus) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedStatus });
   } catch (error) {
     errorHandler(error, res);

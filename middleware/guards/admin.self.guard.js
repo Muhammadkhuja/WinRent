@@ -1,3 +1,4 @@
+const ApiError = require("../../helpers/api.error");
 const { errorHandler } = require("../../helpers/error_handler");
 
 module.exports = function (req, res, next) {

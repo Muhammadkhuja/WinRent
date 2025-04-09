@@ -14,7 +14,7 @@ const router = require("express").Router();
 
 router.post("/", authGuard,adminGuard, addNewRentalPeriod);
 router.get("/", authGuard, adminGuard, findAllRentalPeriods);
-router.get("/:id", authGuard, adminGuard,ownerGuard, ownerSelfGuard, findByIdRentalPeriod);
+router.get("/:id", authGuard, adminGuard, findByIdRentalPeriod);
 router.put("/:id", authGuard, adminGuard, updateRentalPeriod);
 router.delete("/:id", authGuard, adminGuard, deleteRentalPeriod);
 

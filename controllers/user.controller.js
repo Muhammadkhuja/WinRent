@@ -64,15 +64,16 @@ const registrUser = async (req, res) => {
       is_active,
       registered_at,
     } = value;
+    const hashedPassword = bcrypt.hashSync(password, 7);
     const user = await User.create({
       full_name,
       passport,
       phone,
       email,
-      password,
+      password: hashedPassword,
       address,
       is_active,
-      registered_at
+      registered_at,
     });
     const activation_link = uuid.v4();
 
@@ -120,6 +121,9 @@ const findByIdUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ user });
   } catch (error) {
     errorHandler(error, res);
@@ -156,6 +160,9 @@ const updateUser = async (req, res) => {
       },
       { where: { id }, returning: true }
     );
+    if (!updatedUser) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ updatedUser: updatedUser[1][0] });
   } catch (error) {
     errorHandler(error, res);
@@ -166,6 +173,9 @@ const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedUser = await User.destroy({ where: { id } });
+    if (!deletedUser) {
+      return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
+    }
     res.status(200).send({ deletedUser });
   } catch (error) {
     errorHandler(error, res);
@@ -245,7 +255,6 @@ const updatePassword = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const logoutuser = async (req, res) => {
   try {

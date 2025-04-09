@@ -19,7 +19,7 @@ class MailService {
     await this.transporitor.sendMail({
       from: config.get("smtp_user"),
       to: toEMail,
-      subject: "Lugatim accauntini faollantrish",
+      subject: "Winrent accauntini faollantrish",
       text: "",
       html: `
         <div>
