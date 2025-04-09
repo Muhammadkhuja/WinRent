@@ -9,32 +9,32 @@ exports.modelValidation = (body) => {
     name: Joi.string()
       .required()
       .min(4)
-      .message("eng kami 4 ta belgi !")
+      .message("model nomi eng kami 4 ta belgi !")
       .max(30)
-      .message("ism 30 ta belgidan ko'p bo'lmasin !")
+      .message("model nomi 30 ta belgidan ko'p bo'lmasin !")
       .messages({
-        "string.empty": "So'z bo'sh bo'lishi mummkin emas",
-        "any.required": "So'z kiriting",
+        "string.empty": "model nomi bo'sh bo'lishi mummkin emas",
+        "any.required": "model nomi kiriting",
       }),
     brand: Joi.string()
       .required()
       .min(4)
-      .message("eng kami 4 ta belgi !")
+      .message("brend nomida eng kami 4 ta belgi !")
       .max(30)
-      .message("ism 30 ta belgidan ko'p bo'lmasin !")
+      .message("brend nomida 30 ta belgidan ko'p bo'lmasin !")
       .messages({
-        "string.empty": "So'z bo'sh bo'lishi mummkin emas",
-        "any.required": "So'z kiriting",
+        "string.empty": "brend nomi bo'sh bo'lishi mummkin emas",
+        "any.required": "brend nomi kiriting",
       }),
     describtion: Joi.string()
       .required()
       .min(10)
-      .message("eng kami 10 ta belgi !")
+      .message("describtionda eng kami 10 ta belgi !")
       .max(400)
-      .message("ism 400 ta belgidan ko'p bo'lmasin !")
+      .message("describtionda ism 400 ta belgidan ko'p bo'lmasin !")
       .messages({
-        "string.empty": "So'z bo'sh bo'lishi mummkin emas",
-        "any.required": "So'z kiriting",
+        "string.empty": "describtionda bo'sh bo'lishi mummkin emas",
+        "any.required": "describtionda kiriting",
       }),
   });
   return Schamemodel.validate(body, {

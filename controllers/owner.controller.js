@@ -94,6 +94,34 @@ const registrOwners = async (req, res) => {
   }
 };
 
+const updatePassword = async (req, res, next) => {
+  try {
+    const ownerId = req.owner.id;
+    console.log(ownerId);
+
+    const { password, new_password, confirm_password } = req.body;
+
+    const owner = await Owner.findByPk(ownerId);
+    if (!owner) throw ApiError.notFound("Foydalanuvchi topilmadi");
+
+    const isMatch = await bcrypt.compare(password, owner.password);
+    if (!isMatch) throw ApiError.badRequest("Eski parol notogri");
+
+    if (new_password !== confirm_password) {
+      throw ApiError.badRequest("Yangi parollar bir xil emas");
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 7);
+
+    owner.password = hashedPassword;
+    await owner.save();
+
+    res.status(200).send({ message: "Parol muvaffaqiyatli yangilandi" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const findAllOwners = async (req, res) => {
   try {
     const owners = await Owner.findAll();
@@ -155,10 +183,15 @@ const deleteOwner = async (req, res) => {
 const loginowner = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const owner = await Owner.findOne({
       where: { email },
+      attributes: ["id", "email", "password", "is_active"], // BU YERGA password NI QO‘SHING
     });
+
+
+    // const owner = await Owner.findOne({
+    //   where: { email },
+    // });
 
     if (!owner) {
       return res
@@ -291,6 +324,7 @@ const activateOwner = async (req, res) => {
 };
 
 module.exports = {
+  updatePassword,
   registrOwners,
   activateOwner,
   loginowner,

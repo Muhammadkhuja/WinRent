@@ -5,7 +5,7 @@ exports.userValidation = (body) => {
     full_name: Joi.string()
       .required()
       .min(4)
-      .message("eng kami 4 ta belgi !")
+      .message("ismda eng kami 4 ta belgi !")
       .max(30)
       .message("ism 30 ta belgidan ko'p bo'lmasin !")
       .messages({
@@ -15,9 +15,9 @@ exports.userValidation = (body) => {
     passport: Joi.string()
       .pattern(/^[A-Z]{2}[0-9]{6}$/)
       .min(7)
-      .message("eng kamida 7 ta belgi")
+      .message("passport kamida 7 ta belgi")
       .max(10)
-      .message("eng kopida 10 ta belgi bo'lsin")
+      .message("passport eng kopida 10 ta belgi bo'lsin")
       .required()
       .messages({
         "string.empty": "Pasport raqami bo'sh bo'lishi mumkin emas",
@@ -28,7 +28,7 @@ exports.userValidation = (body) => {
       .pattern(/^\d{2}-\d{3}-\d{2}-\d{2}$/)
       .message("namuna: 12-345-67-89, ga ox'shagan bo'lishi kerak !")
       .messages({
-        "string.empty": "raqan' bo'sh bo'lishi mummkin emas",
+        "string.empty": "raqam bo'sh bo'lishi mummkin emas",
         "any.required": "Raqam kiriting",
       }),
     email: Joi.string().email().lowercase().required().messages({

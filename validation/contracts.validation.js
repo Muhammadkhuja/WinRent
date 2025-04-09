@@ -8,16 +8,16 @@ exports.contractValidation = (body) => {
     activation_link: Joi.string(),
 
     userId: Joi.number().required().messages({
-      "string.empty": "Bo'sh bo'lishi mummkin emas",
-      "any.required": "Bo'sh",
+      "string.empty": "contracts userId Bo'sh bo'lishi mummkin emas",
+      "any.required": "contracts userId Bo'sh",
     }),
     productId: Joi.number().required().messages({
-      "string.empty": "Bo'sh bo'lishi mummkin emas",
+      "string.empty": "contracts productId Bo'sh bo'lishi mummkin emas",
       "any.required": "Bo'sh",
     }),
     statusId: Joi.number().required().messages({
-      "string.empty": "Bo'sh bo'lishi mummkin emas",
-      "any.required": "Bo'sh",
+      "string.empty": "contracts statusId Bo'sh bo'lishi mummkin emas",
+      "any.required": "contracts statusId Bo'sh",
     }),
     start_at: Joi.date().iso(),
     end_at: Joi.date().iso(),

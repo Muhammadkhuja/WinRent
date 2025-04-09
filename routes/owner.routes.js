@@ -9,6 +9,7 @@ const {
   refreshTokenowner,
   activateOwner,
   registrOwners,
+  updatePassword,
 } = require("../controllers/owner.controller");
 const adminGuard = require("../middleware/guards/admin.guard");
 const authGuard = require("../middleware/guards/auth.guard");
@@ -23,6 +24,7 @@ router.post("/login", loginowner);
 router.post("/logout", logoutowner);
 router.post("/refresh", refreshTokenowner);
 
+router.put("/ownerpassword", updatePassword)
 router.post("/", authGuard,adminGuard, addNewOwner);
 router.get("/", authGuard,adminGuard, findAllOwners);
 router.get("/:id", authGuard,ownerGuard, ownerSelfGuard, findByIdOwner);

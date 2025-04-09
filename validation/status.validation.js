@@ -6,17 +6,17 @@ exports.statusValidation = (body) => {
       .valid("paid", "unpaid", "process", "canceled", "invalid")
       .required(),
     entry_id: Joi.number().precision(2).positive().required().messages({
-      "string.empty": "Bo'sh bo'lishi mummkin emas",
-      "any.required": "Bo'sh",
+      "string.empty": "entry_id Bo'sh bo'lishi mummkin emas",
+      "any.required": "entry_id Bo'sh",
     }),
     status: Joi.string()
       .required()
       .min(10)
       .max(150)
-      .message("Kopi bilan 150 ta belgi bo'lishi kerak !")
+      .message("statusda Kopi bilan 150 ta belgi bo'lishi kerak !")
       .messages({
-        "string.empty": "So'z bo'sh bo'lishi mummkin emas",
-        "any.required": "So'z kiriting",
+        "string.empty": "status bo'sh bo'lishi mummkin emas",
+        "any.required": "status kiriting",
       }),
     update_at: Joi.date().default(Date.now),
   });

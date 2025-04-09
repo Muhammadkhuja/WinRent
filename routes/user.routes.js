@@ -9,6 +9,7 @@ const {
   refreshTokenuser,
   activateuser,
   registrUser,
+  updatePassword,
 } = require("../controllers/user.controller");
 const authGuard = require("../middleware/guards/auth.guard");
 const clientGuard = require("../middleware/guards/client.guard");
@@ -24,6 +25,7 @@ router.post("/login", loginuser);
 router.post("/logout", logoutuser);
 router.post("/refresh", refreshTokenuser);
 
+router.put("/newpassword",authGuard, updatePassword)
 router.post("/", authGuard, userAdminGuard, addNewUser);
 router.get("/", authGuard, userAdminGuard, findAllUsers);
 router.get("/:id", authGuard, clientGuard, clientSelfGuard(User), findByIdUser);

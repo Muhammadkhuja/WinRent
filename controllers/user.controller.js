@@ -218,6 +218,35 @@ const loginuser = async (req, res) => {
   }
 };
 
+const updatePassword = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    console.log(userId);
+
+    const { password, new_password, confirm_password } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) throw ApiError.notFound("Foydalanuvchi topilmadi");
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw ApiError.badRequest("Eski parol notogri");
+
+    if (new_password !== confirm_password) {
+      throw ApiError.badRequest("Yangi parollar bir xil emas");
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 7);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).send({ message: "Parol muvaffaqiyatli yangilandi" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 const logoutuser = async (req, res) => {
   try {
     const { refreshToken } = req.cookies;
@@ -309,6 +338,7 @@ const activateuser = async (req, res) => {
 };
 
 module.exports = {
+  updatePassword,
   registrUser,
   activateuser,
   loginuser,

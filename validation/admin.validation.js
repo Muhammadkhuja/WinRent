@@ -4,12 +4,12 @@ exports.adminValidation = (body) => {
   const Schameadmin = Joi.object({
     full_name: Joi.string().required()
       .min(4)
-      .message("eng kami 4 ta belgi !")
+      .message("Ism eng kami 4 ta belgi !")
       .max(30)
-      .message("ism 30 ta belgidan ko'p bo'lmasin !")
+      .message("Ism 30 ta belgidan ko'p bo'lmasin !")
       .messages({
-        "string.empty": "So'z bo'sh bo'lishi mummkin emas",
-        "any.required": "So'z kiriting",
+        "string.empty": "Admin Ismi bo'sh bo'lishi mummkin emas",
+        "any.required": "Admin simini kiriting",
       }),
     email: Joi.string().email().lowercase().required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9!$@#]{6,30}$")).required(),
