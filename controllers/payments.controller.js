@@ -41,15 +41,20 @@ const findAllPayments = async (req, res) => {
 const findByIdPayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const payment = await Payments.findByPk(id);
-    // if (!payment) {
-    //   return res.status(400).send({ message: "Foydlanuvchi yo'gu qaren e" });
-    // }
+    const payment = await Payments.findByPk(id, {
+      include: [User, Contracts],
+    });
+
+    if (!payment) {
+      return res.status(404).send({ message: "Payment not found" });
+    }
+
     res.status(200).send({ payment });
   } catch (error) {
     errorHandler(error, res);
   }
 };
+
 
 const updatePayment = async (req, res) => {
   try {
